@@ -1,4 +1,4 @@
-package objectrecogniserclient;
+package com.objectrecogniser;
 
 
 import android.content.DialogInterface;
@@ -25,11 +25,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aishwaryagm.objectrecogniser.R;
 
-import objectrecogniserclient.asynctasks.FirebaseUploaderAsyncTask;
-import objectrecogniserclient.asynctasks.NetworkAvailabilityCheckAsyncTask;
-import objectrecogniserclient.constants.ApplicationState;
+import com.objectrecogniser.R;
+import com.google.firebase.FirebaseApp;
+import com.objectrecogniser.asynctasks.FirebaseUploaderAsyncTask;
+import com.objectrecogniser.asynctasks.NetworkAvailabilityCheckAsyncTask;
+import com.objectrecogniser.constants.ApplicationState;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseApp.initializeApp(this);
     }
 
     public void takePhoto() {

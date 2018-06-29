@@ -1,4 +1,4 @@
-package objectrecogniserclient.services;
+package com.objectrecogniser.services;
 
 import android.app.Service;
 import android.content.Intent;
