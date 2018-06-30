@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.objectrecogniser.R;
 import com.google.firebase.FirebaseApp;
 import com.objectrecogniser.asynctasks.FirebaseUploaderAsyncTask;
 import com.objectrecogniser.asynctasks.NetworkAvailabilityCheckAsyncTask;
@@ -76,11 +75,14 @@ public class MainActivity extends AppCompatActivity {
     private void checkWritePermision() {
         //create an image file name
         int userPreferredPermission = ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE);
+
         int permissionGranted = PackageManager.PERMISSION_GRANTED;
         Log.i("Info", String.format("PermissionGranted %s CheckPermission %s", permissionGranted, userPreferredPermission));
         if (userPreferredPermission != permissionGranted) {
             String[] permissions = {permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE};
             this.requestPermissions(permissions, WRITE_PERMISSION_EXT_STORAGE_REQUEST_CODE);
+        } else{
+            performUserSelectedOption();
         }
     }
 
@@ -91,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
             setImageView();
         }
-
         if (requestCode == REQUEST_GALLERY && resultCode == RESULT_OK) {
             try {
                 InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
@@ -169,12 +170,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectionHelper(CharSequence[] options, int option, boolean optionSelected, DialogInterface dialogInterface) {
         if (options[option].equals("Take Photo")) {
-            Log.i("INFO", String.format("take photo"));
-            if (optionSelected)
+            Log.i("INFO", String.format("take photo optionSelected %s", optionSelected));
+            if (true)
                 takePhoto();
         } else if (options[option].equals("Choose from Gallery")) {
             Log.i("INFO", String.format("Choose from Gallery"));
-            if (optionSelected) {
+            if (true) {
 
                 Log.i("Info", String.format("galleryIntent is about to be called..."));
                 galleryIntent(photoFile);
@@ -200,23 +201,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("INFO", String.format("On request permission result entered , user selected option : %s", userSelectedOption));
         if (requestCode == WRITE_PERMISSION_EXT_STORAGE_REQUEST_CODE && grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            try {
-                photoFile = createImage();
-                switch (userSelectedOption) {
-                    case 0:
-                        if (photoFile != null) {
-                            startCamera(photoFile);
-                        }
-                        break;
-                    case 1:
-                        galleryIntent(photoFile);
-                        break;
-                }
-
-            } catch (IOException exception) {
-                Log.e("ERROR", String.format("Exception occurred while creating the image %s", exception.getMessage()));
-                exception.printStackTrace();
-            }
+            performUserSelectedOption();
         } else {
             Log.i("INFO", "Permission denied");
         }
@@ -241,6 +226,25 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
+    private void performUserSelectedOption() {
+        try {
+            photoFile = createImage();
+            switch (userSelectedOption) {
+                case 0:
+                    if (photoFile != null) {
+                        startCamera(photoFile);
+                    }
+                    break;
+                case 1:
+                    galleryIntent(photoFile);
+                    break;
+            }
+
+        } catch (IOException exception) {
+            Log.e("ERROR", String.format("Exception occurred while creating the image %s", exception.getMessage()));
+            exception.printStackTrace();
+        }
+    }
     private void startCamera(File image) {
         Uri photoURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", image);
         Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
