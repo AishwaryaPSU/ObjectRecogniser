@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,9 +28,14 @@ import android.widget.Toast;
 
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.objectrecogniser.asynctasks.FirebaseUploaderAsyncTask;
 import com.objectrecogniser.asynctasks.NetworkAvailabilityCheckAsyncTask;
+import com.objectrecogniser.callbacks.ImageDescriptionCallback;
+import com.objectrecogniser.callbacks.SimpleCallback;
 import com.objectrecogniser.constants.ApplicationState;
+import com.objectrecogniser.listeners.ImageEventListener;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
+        initializeFirebaseListener();
     }
 
     public void takePhoto() {
@@ -127,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void inspectObject(){
+        Log.i("INFO",String.format("Inspect object called"));
         try {
             if(photoFile != null && photoFile.length() > 0) {
                 File newPhotoFile = createImage();
@@ -136,11 +144,28 @@ public class MainActivity extends AppCompatActivity {
                 Button inspectObjButton = findViewById(R.id.inspectObjects);
                 inspectObjButton.setVisibility(View.INVISIBLE);
                 Toast.makeText(this, "Inspecting Objects...", Toast.LENGTH_LONG).show();
-                ProgressBar progressBar = findViewById(R.id.progressBar);
+                final ProgressBar progressBar = findViewById(R.id.progressBar);
                 progressBar.setVisibility(View.VISIBLE);
-                TextView resultScrollView = findViewById(R.id.resultTextView);
-                TextView resultTextViewDescription = findViewById(R.id.description);
-                FirebaseUploaderAsyncTask firebaseUploaderAsyncTask = new FirebaseUploaderAsyncTask(bitmapImage, newPhotoFile, resultScrollView, this, progressBar, resultTextViewDescription);
+                final TextView resultScrollView = findViewById(R.id.resultTextView);
+                final TextView resultTextViewDescription = findViewById(R.id.description);
+                final MainActivity mainActivity = this;
+                SimpleCallback simpleCallback = new SimpleCallback() {
+                    @Override
+                    public void updateUserInterface(String[] imageDescriptionArray) {
+                        String preFinalText = "";
+                        for(String elementOfResultArray : imageDescriptionArray){
+                            preFinalText= preFinalText+"\n"+elementOfResultArray;
+                        }
+                        final String finalText=preFinalText;
+                        progressBar.setVisibility(View.INVISIBLE);
+                        resultScrollView.setVisibility(View.VISIBLE);
+                        resultTextViewDescription.setVisibility(View.VISIBLE);
+                        resultScrollView.setMovementMethod(new ScrollingMovementMethod());
+                        resultScrollView.setText(finalText);
+                        mainActivity.setApplicationState(ApplicationState.INSPECT_OBJECT_FINISHED);
+                    }
+                };
+                FirebaseUploaderAsyncTask firebaseUploaderAsyncTask = new FirebaseUploaderAsyncTask(bitmapImage, newPhotoFile, resultScrollView, this, progressBar, simpleCallback,resultTextViewDescription);
                 firebaseUploaderAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 applicationState = ApplicationState.INSPECT_OBJECT_CALLED;
             } else {
@@ -349,6 +374,13 @@ public class MainActivity extends AppCompatActivity {
             Log.e("ERROR", String.format("Exception occurred in copying file streams!!! %s ", ex.getMessage()));
             ex.printStackTrace();
         }
+    }
+    private void initializeFirebaseListener() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference imageRef = database.getReference("images");
+        Log.i("INFO",String.format("Image reference %s",imageRef));
+        ImageEventListener imageEventListener = new ImageEventListener();
+        imageRef.addValueEventListener(imageEventListener);
     }
 }
 
