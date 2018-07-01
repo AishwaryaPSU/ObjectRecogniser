@@ -35,6 +35,7 @@ import com.objectrecogniser.asynctasks.NetworkAvailabilityCheckAsyncTask;
 import com.objectrecogniser.callbacks.ImageDescriptionCallback;
 import com.objectrecogniser.callbacks.SimpleCallback;
 import com.objectrecogniser.constants.ApplicationState;
+import com.objectrecogniser.listeners.ImageChildEventListener;
 import com.objectrecogniser.listeners.ImageEventListener;
 
 import java.io.File;
@@ -130,11 +131,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void validateNetworkConnection(View view) {
+        Log.i("INFO",String.format("validateNetworkConnection method entered"));
+        Log.i("INFO",String.format("Button visibility  %s ",view.getVisibility()));
         isNetworkConnected();
     }
 
     public void inspectObject(){
         Log.i("INFO",String.format("Inspect object called"));
+//        final TextView resultScrollView = findViewById(R.id.resultTextView);
+//        resultScrollView.setText("demoText");
         try {
             if(photoFile != null && photoFile.length() > 0) {
                 File newPhotoFile = createImage();
@@ -143,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 takePhotoButton.setVisibility(View.INVISIBLE);
                 Button inspectObjButton = findViewById(R.id.inspectObjects);
                 inspectObjButton.setVisibility(View.INVISIBLE);
+                Log.i("INFO",String.format("Inspect object button set invisible"));
                 Toast.makeText(this, "Inspecting Objects...", Toast.LENGTH_LONG).show();
                 final ProgressBar progressBar = findViewById(R.id.progressBar);
                 progressBar.setVisibility(View.VISIBLE);
@@ -152,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 SimpleCallback simpleCallback = new SimpleCallback() {
                     @Override
                     public void updateUserInterface(String[] imageDescriptionArray) {
+                        Log.i("INFO",String.format("Updating result view with descriptions"));
                         String preFinalText = "";
                         for(String elementOfResultArray : imageDescriptionArray){
                             preFinalText= preFinalText+"\n"+elementOfResultArray;
@@ -322,6 +329,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         switch (applicationState) {
             case PHOTO_TAKEN:
+                Log.i("INFO", String.format("Application state is %s and image to display is %s ", applicationState, imageToDisplay));
                 applicationState = ApplicationState.APPLICATION_STARTED;
                 Log.i("INFO", String.format("Application state is %s and image to display is %s ", applicationState, imageToDisplay));
                 imageToDisplay.setImageBitmap(null);
@@ -379,8 +387,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference imageRef = database.getReference("images");
         Log.i("INFO",String.format("Image reference %s",imageRef));
-        ImageEventListener imageEventListener = new ImageEventListener();
-        imageRef.addValueEventListener(imageEventListener);
+        ImageChildEventListener imageChildEventListener = new ImageChildEventListener();
+        imageRef.addChildEventListener(imageChildEventListener);
     }
 }
 
