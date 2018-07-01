@@ -15,11 +15,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.objectrecogniser.MainActivity;
+import com.objectrecogniser.callbacks.ImageDescriptionCallback;
+import com.objectrecogniser.callbacks.SimpleCallback;
 import com.objectrecogniser.constants.ApplicationState;
+import com.objectrecogniser.helpers.SingletonHashMap;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by aishwaryagm on 6/2/18.
@@ -32,15 +36,16 @@ public class FirebaseUploaderAsyncTask extends AsyncTask<Void,Void,Void>  {
     private TextView resultTextView;
     private MainActivity mainActivity;
     private ProgressBar progressBar;
+    private SimpleCallback simpleCallback;
     private TextView resultTextDescription;
 
-
-    public FirebaseUploaderAsyncTask(Bitmap bitmapImage, File photoFile , TextView resultTextView, MainActivity mainActivity, ProgressBar progressBar, TextView resultTextDescription){
+    public FirebaseUploaderAsyncTask(Bitmap bitmapImage, File photoFile , TextView resultTextView, MainActivity mainActivity, ProgressBar progressBar, SimpleCallback simpleCallback, TextView resultTextDescription){
         this.bitmapImage=bitmapImage;
         this.photoFile=photoFile;
         this.resultTextView=resultTextView;
         this.mainActivity=mainActivity;
         this.progressBar=progressBar;
+        this.simpleCallback=simpleCallback;
         this.resultTextDescription=resultTextDescription;
     }
 
@@ -82,6 +87,9 @@ public class FirebaseUploaderAsyncTask extends AsyncTask<Void,Void,Void>  {
     }
 
     public void uploadToFirebaseStorage(byte[] bytes,String filename){
+        String refactoredFileName = filename.replaceAll("-","").replace(".jpg","");
+        HashMap<String,SimpleCallback> singletonHashMap = SingletonHashMap.getHashMap();
+        singletonHashMap.put(refactoredFileName,simpleCallback);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference imageRecogniserStorageRef = storage.getReference();
         StorageReference imagesFolderRef = imageRecogniserStorageRef.child("images");
@@ -102,6 +110,5 @@ public class FirebaseUploaderAsyncTask extends AsyncTask<Void,Void,Void>  {
                 Log.i("INFO",String.format("upload successful %s",taskSnapshot.getMetadata()));
             }
         });
-
     }
 }
