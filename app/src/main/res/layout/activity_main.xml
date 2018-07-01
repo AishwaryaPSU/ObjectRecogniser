@@ -42,7 +42,6 @@
         android:layout_below="@+id/takePhoto"
         android:background="@android:drawable/editbox_background"
         android:maxLines="100"
-        android:onClick="validateNetworkConnection"
         android:overScrollMode="ifContentScrolls"
         android:paddingLeft="40dp"
         android:scrollIndicators="right"
