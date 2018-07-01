@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "184819548274",
+    "firebase_url": "https://objectrecognizer-205306.firebaseio.com",
+    "project_id": "objectrecognizer-205306",
+    "storage_bucket": "objectrecognizer-205306.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184819548274:android:d59b16c3dac77d0c",
+        "android_client_info": {
+          "package_name": "com.objectrecogniser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184819548274-pqfa4lje7f0g354of5sqi954ld4rog5l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjPSRh5GtTzTAQlaeYHqB-ohuekvY29PA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

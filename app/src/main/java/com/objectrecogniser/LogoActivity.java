@@ -1,4 +1,4 @@
-package objectrecogniserclient;
+package com.objectrecogniser;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.aishwaryagm.objectrecogniser.R;
+import com.objectrecogniser.R;
 
 /**
  * Created by aishwaryagm on 6/9/18.

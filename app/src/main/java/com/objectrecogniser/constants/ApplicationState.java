@@ -1,4 +1,4 @@
-package objectrecogniserclient.constants;
+package com.objectrecogniser.constants;
 
 /**
  * Created by aishwaryagm on 6/7/18.

@@ -1,6 +1,5 @@
-package objectrecogniserclient.asynctasks;
+package com.objectrecogniser.asynctasks;
 
-import android.Manifest;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -9,9 +8,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
-import objectrecogniserclient.MainActivity;
+import com.objectrecogniser.MainActivity;
 
 /**
  * Created by aishwaryagm on 6/15/18.

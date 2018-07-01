@@ -1,4 +1,4 @@
-package objectrecogniserclient.asynctasks;
+package com.objectrecogniser.asynctasks;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import objectrecogniserclient.MainActivity;
-import objectrecogniserclient.constants.ApplicationState;
+import com.objectrecogniser.MainActivity;
+import com.objectrecogniser.constants.ApplicationState;
 import java.io.File;
 import java.util.Arrays;
 
