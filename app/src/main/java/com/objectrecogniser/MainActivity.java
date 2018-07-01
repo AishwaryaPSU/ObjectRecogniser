@@ -210,6 +210,14 @@ public class MainActivity extends AppCompatActivity {
             if (true) {
 
                 Log.i("Info", String.format("galleryIntent is about to be called..."));
+                if(photoFile == null) {
+                    try {
+                        photoFile = createImage();
+                    } catch(Exception exception) {
+                        Log.e("ERROR", String.format("Exception Occurred at creating empty image for gallery Intent %s", exception.getMessage()));
+                        exception.printStackTrace();
+                    }
+                }
                 galleryIntent(photoFile);
             }
         } else if (options[option].equals("Cancel")) {
@@ -219,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void galleryIntent(File photoFile) {
-        Log.i("Info", String.format("galleryIntent entered..."));
+        Log.i("Info", String.format("galleryIntent entered... photoFile : %s", photoFile));
         Uri photoURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
         Intent galIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
