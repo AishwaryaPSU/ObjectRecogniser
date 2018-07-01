@@ -39,7 +39,6 @@ public class NetworkAvailabilityCheckAsyncTask extends AsyncTask<Void, Void, Voi
                         activity.inspectObject();
                     }
                 });
-
             } else {
                 activity.runOnUiThread(new Runnable() {
                     @Override
@@ -61,20 +60,3 @@ public class NetworkAvailabilityCheckAsyncTask extends AsyncTask<Void, Void, Voi
         return null;
     }
 }
-
-//    @Override
-//    protected void onPostExecute(NetworkInfo networkInfo) {
-//        try {
-//            InetAddress ipAddr = InetAddress.getByName("google.com");
-//            Log.i("INFO",String.format("IP address : %s",ipAddr.getAddress()));
-//            if(networkInfo!=null && !ipAddr.equals("")){
-//                activity.inspectObject();
-//            } else {
-//                Toast.makeText(activity, String.format("Please connect to internet..."), Toast.LENGTH_SHORT).show();
-//            }
-//        } catch (Exception exception) {
-//            Log.i("Error",String.format("Exception occurred %s ",exception.getMessage()));
-//            exception.printStackTrace();
-//        }
-//    }
-
